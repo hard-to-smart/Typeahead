@@ -1,30 +1,22 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UPIids } from "./UpiLists";
 export const Typehead = () => {
   const [inputValue, setInputValue] = useState("");
   const [optionsValue, setOptionsValue] = useState([]);
   const [displayParseValue, setDisplayParseValue] = useState("");
   const [focus, setFocus] = useState("");
-
+    const inputRef = useRef(null);
   const handleInputValue = (e) => {
     setInputValue(e.target.value);
   };
 
   const handleOptionSelect = (e) => {
     setDisplayParseValue(e.target.innerText);
+    setInputValue(inputValue.concat(e.target.innerText));
+    inputRef.current.focus()
   };
-  
-  const ShowOptionsList = memo(() => {
-    return (
-      <ul>
-        {optionsValue.map((value, index) => (
-          <li key={index} onClick={handleOptionSelect}>{value}</li>
-        ))}
-      </ul>
-    );
-  });
 
-const handleOptionsValue = useCallback(() => {
+const handleOptionsValue = () => {
     setOptionsValue(
     UPIids.filter((value) => {
       if (inputValue.match(/^(.+@)/)) {
@@ -32,7 +24,7 @@ const handleOptionsValue = useCallback(() => {
       }
     })
     );
-  }, [inputValue]);
+  };
 
   useEffect(()=>{
     handleOptionsValue();
@@ -43,14 +35,19 @@ const handleOptionsValue = useCallback(() => {
       <div className="input-parent">
         <input
           name="upi"
+          ref={inputRef}
           value={inputValue}
           autoFocus
           placeholder="Enter Upi Id"
           onChange={handleInputValue}
         />
-        <span className="display-option">{displayParseValue}</span>
+        <span className="">{displayParseValue}</span>
       </div>
-      <ShowOptionsList/>
+      <ul>
+        {optionsValue.map((value, index) => (
+          <li key={index} onClick={handleOptionSelect}>{value}</li>
+        ))}
+      </ul>
     </>
   );
 };
