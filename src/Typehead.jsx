@@ -4,17 +4,21 @@ export const Typehead = () => {
   const [inputValue, setInputValue] = useState("");
   const [optionsValue, setOptionsValue] = useState([]);
   const [displayParseValue, setDisplayParseValue] = useState("");
-  const [focused, setFocused] = useState("");
+  const [focus, setFocus] = useState("");
 
   const handleInputValue = (e) => {
     setInputValue(e.target.value);
   };
 
+  const handleOptionSelect = (e) => {
+    setDisplayParseValue(e.target.innerText);
+  };
+  
   const ShowOptionsList = memo(() => {
     return (
       <ul>
         {optionsValue.map((value, index) => (
-          <li key={index} >{value}</li>
+          <li key={index} onClick={handleOptionSelect}>{value}</li>
         ))}
       </ul>
     );
