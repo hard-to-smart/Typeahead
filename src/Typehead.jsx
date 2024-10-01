@@ -24,13 +24,13 @@ export const Typehead = () => {
             const returnVal = id.startsWith(inputValue.split("@")[1], id);
             console.log(returnVal);
             setFocus(true);
-
             return returnVal;
           }
           return id;
         } else {
           setOptionsValue([]);
           setDisplayParseValue("");
+          setFocus(false)
         }
       })
     );
