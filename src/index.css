@@ -80,7 +80,7 @@ ul{
   width:100%;
   margin: 0 auto;
   height: 400px;
-  overflow-y:auto;
+  overflow-y:scroll;
   overscroll-behavior:none;
 
 }

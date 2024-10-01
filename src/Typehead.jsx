@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UPIids } from "./UpiLists";
 export const Typehead = () => {
   // take input
@@ -6,7 +6,7 @@ export const Typehead = () => {
   // setting options
   const [optionsValue, setOptionsValue] = useState([]);
   // displaying the options in the span
-  const [displayParseValue, setDisplayParseValue] = useState(UPIids[0]);
+  const [displayParseValue, setDisplayParseValue] = useState("");
   const [currentSuggestion, setCurrentSuggestion] = useState(UPIids[0]);
   const [onFocus, setFocus] = useState(false);
   //this sets input value
@@ -14,6 +14,7 @@ export const Typehead = () => {
     setInputValue(e.target.value);
   };
 
+  //this sets the options, it has 2 return conditions, 1 if the @ keyword is found and 2nd if the value matches after the @
   const handleOptionsValue = () => {
     setOptionsValue(
       UPIids.filter((id) => {
@@ -27,49 +28,56 @@ export const Typehead = () => {
             return returnVal;
           }
           return id;
+        } else {
+          setOptionsValue([]);
+          setDisplayParseValue("");
         }
       })
     );
   };
 
+  //this works for both, setting the highlight for the list and also to display a typeahead value on the input
   const handleOptionSelect = (e) => {
     let pointerIndex = optionsValue.indexOf(currentSuggestion);
-    console.log(pointerIndex)
+    console.log(pointerIndex);
     if (e.keyCode === 40) {
       //down arrow
       if (pointerIndex < optionsValue.length - 1) {
-        setCurrentSuggestion(optionsValue[pointerIndex +1]);
-        setDisplayParseValue(currentSuggestion);
-
+        let newSuggestion = optionsValue[pointerIndex + 1];
+        setCurrentSuggestion(newSuggestion);
+        setDisplayParseValue(newSuggestion);
       } else {
         setCurrentSuggestion(optionsValue[0]);
-        setDisplayParseValue('')
-      } 
-
+        setDisplayParseValue("");
+      }
     }
     if (e.keyCode === 38) {
-      if(pointerIndex>0){
-        setCurrentSuggestion(optionsValue[pointerIndex -1]);
-        setDisplayParseValue(currentSuggestion);
-        
-
-      }
-      else{
-        setCurrentSuggestion(optionsValue[optionsValue.pointerIndex-1])
-        setDisplayParseValue('')
+      //up arrow
+      if (pointerIndex > 0) {
+        let newSuggestion = optionsValue[pointerIndex - 1];
+        setCurrentSuggestion(newSuggestion);
+        setDisplayParseValue(newSuggestion);
+      } else {
+        setCurrentSuggestion(optionsValue[optionsValue.length - 1]);
+        setDisplayParseValue("");
       }
     }
     if (e.keyCode === 39 && focus) {
-      setInputValue((prev)=>[prev] + currentSuggestion);
+      //right arrow
+      setInputValue((prev) => [prev] + currentSuggestion);
       setFocus(false);
     }
-
   };
 
+  // the options are to be recalculated after every change in input
   useEffect(() => {
     handleOptionsValue();
-
   }, [inputValue]);
+
+  // to scroll the ul div section to the list currently in focus
+
+  //implement the scrollTo or scrollToView function
+  //for that we would need to set reference to list
 
   return (
     <>
@@ -94,7 +102,7 @@ export const Typehead = () => {
             value={inputValue}
             autoFocus
             className="input-main-sub"
-            // placeholder="Enter Upi Id"
+            placeholder="Enter Upi Id"
             onChange={handleInputValue}
             onKeyDown={handleOptionSelect}
             style={{ zIndex: 2 }}
