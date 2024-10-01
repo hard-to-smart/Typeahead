@@ -6,7 +6,7 @@ export const Typehead = () => {
   // setting options
   const [optionsValue, setOptionsValue] = useState([]);
   // displaying the options in the span
-  const [displayParseValue, setDisplayParseValue] = useState("");
+  const [displayParseValue, setDisplayParseValue] = useState(UPIids[0]);
   const [currentSuggestion, setCurrentSuggestion] = useState(UPIids[0]);
   const [onFocus, setFocus] = useState(false);
   //this sets input value
@@ -38,11 +38,12 @@ export const Typehead = () => {
     if (e.keyCode === 40) {
       //down arrow
       if (pointerIndex < optionsValue.length - 1) {
-        setCurrentSuggestion(optionsValue[pointerIndex + 1]);
+        setCurrentSuggestion(optionsValue[pointerIndex +1]);
         setDisplayParseValue(currentSuggestion);
 
       } else {
         setCurrentSuggestion(optionsValue[0]);
+        setDisplayParseValue('')
       } 
 
     }
@@ -50,14 +51,16 @@ export const Typehead = () => {
       if(pointerIndex>0){
         setCurrentSuggestion(optionsValue[pointerIndex -1]);
         setDisplayParseValue(currentSuggestion);
+        
 
       }
       else{
         setCurrentSuggestion(optionsValue[optionsValue.pointerIndex-1])
+        setDisplayParseValue('')
       }
     }
-    if (e.keyCode === 13 && focus) {
-      setInputValue(inputValue.split("@", [0]) + "@" + currentSuggestion);
+    if (e.keyCode === 39 && focus) {
+      setInputValue((prev)=>[prev] + currentSuggestion);
       setFocus(false);
     }
 
@@ -66,7 +69,7 @@ export const Typehead = () => {
   useEffect(() => {
     handleOptionsValue();
 
-  }, [inputValue, displayParseValue]);
+  }, [inputValue]);
 
   return (
     <>
@@ -98,9 +101,9 @@ export const Typehead = () => {
           />
         </div>
         <ul>
-          {optionsValue.map((value) => (
+          {optionsValue.map((value, index) => (
             <li
-              key={value}
+              key={index}
               className={`${value === currentSuggestion && "list-hover"}`}
             >
               {value}
