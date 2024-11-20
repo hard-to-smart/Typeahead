@@ -21,8 +21,7 @@ export const Typehead = () => {
         if (inputValue.match(/^(.+@)/)) {
           let check = id;
           if (check) {
-            const returnVal = id.startsWith(inputValue.split("@")[1], id);
-            console.log(returnVal);
+            const returnVal = id.startsWith(inputValue.split("@")[1]);
             setFocus(true);
             return returnVal;
           }
@@ -30,7 +29,7 @@ export const Typehead = () => {
         } else {
           setOptionsValue([]);
           setDisplayParseValue("");
-          setFocus(false)
+          setFocus(false);
         }
       })
     );
@@ -39,7 +38,7 @@ export const Typehead = () => {
   //this works for both, setting the highlight for the list and also to display a typeahead value on the input
   const handleOptionSelect = (e) => {
     let pointerIndex = optionsValue.indexOf(currentSuggestion);
-    console.log(pointerIndex);
+    setDisplayParseValue(currentSuggestion);
     if (e.keyCode === 40) {
       //down arrow
       if (pointerIndex < optionsValue.length - 1) {
@@ -64,9 +63,14 @@ export const Typehead = () => {
     }
     if (e.keyCode === 39 && focus) {
       //right arrow
-      setInputValue((prev) => [prev] + currentSuggestion);
+      // finds the index of @ and then takes a substring after @
+      const atIndex = inputValue.substring(inputValue.indexOf("@") + 1);
+      const suggestionPart = currentSuggestion.substring(atIndex.length); // Remaining suggestion
+      setInputValue((prev) => prev + suggestionPart); // Append suggestion
       setFocus(false);
     }
+    // if( e.keyCode === 37 || inputValue.match(/^(.+@)/))
+    // console.log("true");
   };
 
   // the options are to be recalculated after every change in input
